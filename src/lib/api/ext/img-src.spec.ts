@@ -18,6 +18,7 @@ import {FlexLayoutModule} from '../../module';
 import {customMatchers} from '../../utils/testing/custom-matchers';
 import {makeCreateTestComponent, queryFor} from '../../utils/testing/helpers';
 import {expect} from '../../utils/testing/custom-matchers';
+import {_dom as _} from '../../utils/testing/dom-tools';
 
 const SRC_URLS = {
   'xs': [
@@ -78,15 +79,14 @@ describe('img-src directive', () => {
 
   describe('with static api', () => {
     it('should preserve the static src attribute', () => {
+      let url = 'https://dummyimage.com/300x300/c72538/ffffff.png';
       componentWithTemplate(`
-        <img src="https://dummyimage.com/300x300/c72538/ffffff.png">
+        <img src="${url}">
       `);
       const img = queryFor(fixture, 'img')[0].nativeElement;
 
       fixture.detectChanges();
-      expect(img).toHaveAttributes({
-        src: 'https://dummyimage.com/300x300/c72538/ffffff.png'
-      });
+      expect(_.getAttribute( img,  'src')).toEqual(url);
     });
 
     it('should work with empty src attributes', () => {

@@ -70,7 +70,7 @@ export class ImgSrcDirective extends BaseFxDirective implements OnInit, OnChange
     // Cache initial value of `src` to use as responsive fallback
     this.cacheDefaultSrc(this.defaultSrc);
 
-    if ( this.hasResponsiveKeys ) {
+    if (this.hasResponsiveKeys) {
       // Listen for responsive changes
       this._listenForMediaQueryChanges('src', this.defaultSrc, () => {
         this._updateSrcFor();
@@ -92,12 +92,16 @@ export class ImgSrcDirective extends BaseFxDirective implements OnInit, OnChange
    * Use the [responsively] activated input value to update
    * the host img src attribute or assign a default `img.src=''`
    * if the src has not been defined.
+   *
+   * Do nothing to standard `<img src="">` usages, only when responsive
+   * keys are present do we actually call `setAttribute()`
    */
   protected _updateSrcFor() {
-    let url = this._mqActivation ? this._mqActivation.activatedInput || '' : this.defaultSrc;
-    this._renderer.setAttribute(this.nativeElement, 'src', url);
+    if (this.hasResponsiveKeys) {
+      let url = this._mqActivation ? this._mqActivation.activatedInput || '' : this.defaultSrc;
+      this._renderer.setAttribute(this.nativeElement, 'src', url);
+    }
   }
-
 
   /**
    * Cache initial value of 'src', this will be used as fallback when breakpoint
